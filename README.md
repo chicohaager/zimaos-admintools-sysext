@@ -34,6 +34,8 @@ The versions are Debian stable's, which receive Debian's security fixes. Some up
 
 ## Install (on the ZimaOS host)
 
+With the [Module Manager](https://github.com/chicohaager/modmanager) (v0.2.5 or later): tab **Catalog**, **Admin Tools**, **Install** — it checks the release checksum and refuses an image that would replace files of ZimaOS. By hand:
+
 ```sh
 cd /tmp
 curl -fsSLO https://github.com/chicohaager/zimaos-admintools-sysext/releases/latest/download/admintools-amd64.raw
