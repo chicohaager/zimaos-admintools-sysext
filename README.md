@@ -17,6 +17,7 @@ Command-line tools that ZimaOS does not ship, as one `systemd-sysext` module. No
 | `iftop` | network bandwidth per connection |
 | `screen` | sessions that survive a lost SSH connection |
 | `mosh-server` | server side of [mosh](https://mosh.org) |
+| `ping-iputils` | a working `ping` (iputils) — ZimaOS' own `/usr/bin/ping` is a BusyBox applet that exits 1 without output (measured 1.8.0); the module does not replace it, so it has its own name |
 
 Only tools ZimaOS 1.8.0 lacks are in it (`command -v` on the host, 2026-10-23). `cmp` is left out on purpose: ZimaOS ships `/usr/bin/cmp`, and a sysext overlays `/usr`, so its copy would replace the host's.
 
@@ -64,6 +65,6 @@ Run `check-collisions.sh` before the first install — once the module is merged
 
 Measured on ZimaOS 1.8.0 (ZimaBoard 2), 2026-10-23: 78 files, 0 collisions (the same check flagged `/usr/bin/cmp` while it was still in the image); before the install all tool checks failed, after it the host test reported 15 OK, 0 FAIL — the tools including a real `tcpdump` capture, plus the check that the host's `grep` stays undisturbed. No running process on the host had loaded a library from `/usr/lib/admintools/` (all 260 `/proc/*/maps` read as root; a `screen` session as positive control was the only one).
 
-**Note:** `ping` on ZimaOS 1.8.0 is a BusyBox applet that exits 1 without any output, even for `--help` (measured on the same host). This module does not replace it — a file at `/usr/bin/ping` would overlay the host's own.
+**Note:** `ping` on ZimaOS 1.8.0 is a BusyBox applet that exits 1 without any output, even for `--help` (measured on the same host). This module does not replace it — a file at `/usr/bin/ping` would overlay the host's own — and ships `ping-iputils` instead.
 
 MIT License for this repository, see [LICENSE](LICENSE). The bundled programs keep their own licenses (GPL and others), shipped inside the image.

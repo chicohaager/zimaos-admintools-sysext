@@ -27,6 +27,9 @@ check iotop    sh -c "iotop -b -n 1 -o >/dev/null"
 check iftop    sh -c "timeout 10 iftop -t -s 1 -i lo 2>&1 | grep -q 'Total send rate'"
 check screen   sh -c "screen -dmS admintoolstest sleep 3 && screen -ls | grep -q admintoolstest"
 check mosh-server sh -c "mosh-server --version | grep -q mosh"
+check ping-iputils sh -c "ping-iputils -c 1 -W 2 127.0.0.1 | grep -q '1 received'"
+gw=$(ip route show default | awk '{print $3; exit}')
+[ -z "$gw" ] || check ping-gateway sh -c "ping-iputils -c 2 -W 2 $gw | grep -q ' 0% packet loss\| 50% packet loss'"
 # The bundled libraries must not leak into host tools: host grep without loader warnings.
 check host-grep sh -c "! /usr/bin/grep --version 2>&1 | grep -q 'no version information'"
 echo "admintools host-test: $ok OK, $bad FAIL"
