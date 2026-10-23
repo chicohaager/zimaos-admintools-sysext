@@ -1,8 +1,8 @@
 # admintools for ZimaOS
 
-**Version 1.0.0** · ZimaOS 1.8.0 (amd64) · sysext module `admintools`
+**Version 1.1.0** · ZimaOS 1.8.0 (amd64) · sysext module `admintools`
 
-Command-line tools that ZimaOS does not ship, as one `systemd-sysext` module. No daemon, no tile — the tools are simply there in the ZimaOS terminal and over SSH.
+Command-line tools that ZimaOS does not ship, as one `systemd-sysext` module. The tools are there in the ZimaOS terminal and over SSH; the **Admin Tools** tile on the dashboard lists them with their versions and runs a self-test (every tool does one real job on the host — the same script as `tools/host-test.sh`).
 
 | Tool | What for |
 |---|---|
@@ -48,7 +48,7 @@ Remove with `sudo zpkg remove admintools`.
 ## Build
 
 ```sh
-sh build.sh amd64     # needs docker, squashfs-tools, binutils and ../lintux-modkit
+sh build.sh amd64     # needs docker, Go, node, squashfs-tools, binutils and ../lintux-modkit
 ```
 
 `dist/admintools-amd64.raw` (+ `.sha256`). The build ends with `tools/check-image.sh`: every program is in the image, has its RPATH, and every library it or its libraries need is inside or part of the glibc core.

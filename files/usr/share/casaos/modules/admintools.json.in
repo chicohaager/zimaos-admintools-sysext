@@ -1,0 +1,18 @@
+{
+  "name": "admintools",
+  "version": "v@VERSION@",
+  "ui": {
+    "name": "admintools",
+    "title": { "en_us": "Admin Tools", "de_de": "Admin-Werkzeuge" },
+    "prefetch": true,
+    "show": true,
+    "entry": "/modules/admintools/index.html",
+    "icon": "/modules/admintools/appicon.svg",
+    "description": "diff, strace, tcpdump, nsenter and more command-line tools, with a self-test",
+    "formality": {
+      "type": "newtab",
+      "props": { "width": "100vh", "height": "100vh", "hasModalCard": true, "animation": "zoom-in" }
+    }
+  },
+  "services": [ { "name": "admintools-web" } ]
+}

@@ -1,0 +1,20 @@
+[Unit]
+Description=admintools tile for ZimaOS (tool list and self-test)
+Documentation=https://github.com/chicohaager/zimaos-admintools-sysext
+After=network-online.target zimaos-gateway.service
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/admintools-web
+Restart=always
+RestartSec=5
+# Root in the host's namespaces: the self-test runs nsenter, tcpdump, strace and
+# iotop against the host. No Protect*/Private* directives — they would give the
+# service a private mount namespace (measured for modmanager on 1.8.0).
+RestrictRealtime=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target
