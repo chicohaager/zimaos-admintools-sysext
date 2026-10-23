@@ -3,6 +3,8 @@
 # has in /usr. A sysext overlays /usr, so such a file would silently replace the host's own.
 #   unsquashfs -lc admintools-amd64.raw | sed 's|^squashfs-root||' > files.txt   (build machine)
 #   sh check-collisions.sh < files.txt                                            (host)
+# Run it BEFORE the first install: once a version of the module is merged, its own files are in /usr
+# and show up here (measured 2026-10-23 on an update: 16 "collisions", all from the installed admintools).
 n=0; hit=0
 while read -r f; do
   n=$((n + 1))

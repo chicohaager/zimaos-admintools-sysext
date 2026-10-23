@@ -22,7 +22,7 @@ for p in "$@"; do
 done
 # Every library any program or library needs must be in the image or be part of the glibc core
 # (the host provides that). ldd would quietly resolve the rest from the build machine.
-for f in $(find "$T/r/usr/bin" "$T/r/usr/sbin" "$T/r/usr/lib" -type f 2>/dev/null); do
+for f in $(find "$T/r/usr/bin" "$T/r/usr/sbin" "$T/r/usr/lib" "$T/r/usr/libexec" -type f 2>/dev/null); do
   file -b "$f" | grep -q '^ELF' || continue
   for n in $(readelf -d "$f" | sed -n 's/.*(NEEDED).*\[\(.*\)\]/\1/p'); do
     echo "$n" | grep -qE '^(libc|libm|libpthread|libdl|librt|ld-linux-x86-64|ld-linux-aarch64|libresolv|libutil|libmvec)\.so' && continue

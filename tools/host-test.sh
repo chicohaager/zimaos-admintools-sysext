@@ -16,7 +16,10 @@ check diff3    sh -c "diff3 '$T/1' '$T/2' '$T/1' >/dev/null; [ \$? -le 1 ]"
 check sdiff    sh -c "sdiff '$T/1' '$T/2' >/dev/null; [ \$? -le 1 ]"
 check nsenter  sh -c "[ \"\$(nsenter -t 1 -m readlink /proc/self/ns/mnt)\" = \"\$(readlink /proc/1/ns/mnt)\" ]"
 check strace   sh -c "strace -f -e trace=execve true 2>&1 | grep -q execve"
-check tcpdump  sh -c "tcpdump -D | grep -q lo"
+check tcpdump-list sh -c "tcpdump -D | grep -q lo"
+# A real capture, not just the interface list: Debian's tcpdump drops privileges to a user
+# "tcpdump" that ZimaOS does not have ("Couldn't find user 'tcpdump'", measured 1.8.0).
+check tcpdump  sh -c "timeout 8 tcpdump -ni lo -c 1 udp port 9 > '$T/td' 2>&1 & sleep 2; python3 -c 'import socket; socket.socket(socket.AF_INET, socket.SOCK_DGRAM).sendto(b\"x\", (\"127.0.0.1\", 9))'; wait; grep -q '1 packet captured' '$T/td' || { cat '$T/td'; false; }"
 check socat    sh -c "echo hallo | socat - SYSTEM:cat | grep -qx hallo"
 check pv       sh -c "head -c 1048576 /dev/zero | pv -q | wc -c | grep -qx 1048576"
 check 7z       sh -c "cd '$T' && 7z a -bd x.7z 1 >/dev/null && mkdir out && 7z x -bd -oout x.7z >/dev/null && cmp 1 out/1"
@@ -27,5 +30,5 @@ check mosh-server sh -c "mosh-server --version | grep -q mosh"
 # The bundled libraries must not leak into host tools: host grep without loader warnings.
 check host-grep sh -c "! /usr/bin/grep --version 2>&1 | grep -q 'no version information'"
 echo "admintools host-test: $ok OK, $bad FAIL"
-rm -f "$T/1" "$T/2" "$T/x.7z" "$T/out/1"; rmdir "$T/out" "$T" 2>/dev/null
+rm -f "$T/1" "$T/2" "$T/x.7z" "$T/out/1" "$T/td"; rmdir "$T/out" "$T" 2>/dev/null
 [ "$bad" -eq 0 ]
