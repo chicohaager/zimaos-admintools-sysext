@@ -38,7 +38,9 @@ mv build/root/usr/bin/ping build/root/usr/bin/ping-iputils
 # service), UI files, the web backend and the self-test it runs.
 cp -a files/. build/root/
 sh "$MODKIT/sysext/add-web.sh" admintools build/root "$VERSION"
-CGO_ENABLED=0 GOOS=linux GOARCH="$ARCH" go build -trimpath -ldflags="-s -w -X main.version=$VERSION" \
+# -buildvcs=false: without it Go stamps the nearest tag and "dirty" (any untracked file) into the binary,
+# so a rebuild from the release tag differed from the release (measured 2026-10-23, restic-web).
+CGO_ENABLED=0 GOOS=linux GOARCH="$ARCH" go build -trimpath -buildvcs=false -ldflags="-s -w -X main.version=$VERSION" \
   -o build/root/usr/bin/admintools-web ./cmd/admintools-web
 mkdir -p build/root/usr/libexec/admintools
 install -m 755 tools/host-test.sh build/root/usr/libexec/admintools/selftest.sh
